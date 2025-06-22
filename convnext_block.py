@@ -11,5 +11,13 @@ class ConvNeXtBlock(nn.Module):
         self.act=nn.GELU()
         self.pwconv2 = nn.Linear(4 * dim, dim)
     
-    def forward():
-        pass
+    def forward(self,x):
+        inputx=x
+        x=self.dwconv(x)
+        x=x.permute(0,2,3,1) #[B,H,W,C]
+        x=self.norm(x)
+        x=self.pwconv1(x)
+        x=self.act(x)
+        x=self.pwconv2(x)
+        x=x.permute(0,3,1,2) #[B,C,H,W]
+        return x+inputx
